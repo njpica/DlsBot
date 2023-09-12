@@ -1,0 +1,112 @@
+<html lang="zh-CN" style="height: 100%">
+<head>
+    <meta charset="utf-8">
+    <title>电费记录</title>
+</head>
+<body style="height: 100%; margin: 0">
+<div id="container" style="height: 100%"></div>
+<script type="text/javascript" src="file:\\\{{ echarts }}"></script>
+
+<script type="text/javascript">
+    var dom = document.getElementById('container');
+    var myChart = echarts.init(dom, {{ style }}, {
+        renderer: 'canvas',
+        useDirtyRect: false
+    });
+    var app = {};
+
+    var option;
+
+    const colors = ['#5470C6', '#EE6666'];
+    option = {
+        color: colors,
+        animation: false,
+        title: {
+            text: '电费表：{{ room }}',
+            textStyle: {
+                fontSize: 38,
+                fontStyle: "oblique"
+            }
+        },
+        textStyle: {
+            fontWeight: "bolder"
+        },
+        grid: {
+            right: '10%'
+        },
+        xAxis: [
+            {
+                type: 'category',
+                axisTick: {
+                    alignWithLabel: true
+                },
+                data: {{ time }}
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value',
+                label: {
+                    show: true
+                },
+                position: 'left',
+                alignTicks: true,
+                axisLine: {
+                    show: true,
+                    lineStyle: {
+                        color: colors[0]
+                    }
+                },
+                axisLabel: {
+                    formatter: '{value} 度'
+                }
+            },
+            {
+                type: 'value',
+                name: '电量差值',
+                label: {
+                    show: true
+                },
+                position: 'right',
+                alignTicks: true,
+                axisLine: {
+                    show: true,
+                    lineStyle: {
+                        color: colors[1]
+                    }
+                },
+                axisLabel: {
+                    formatter: '{value} 度'
+                }
+            }
+        ],
+        series: [
+            {
+                name: '电量',
+                type: 'bar',
+                label: {
+                    show: true
+                },
+                data: {{ power }}
+            },
+            {
+                name: '电量差值',
+                type: 'line',
+                label: {
+                    show: true
+                },
+                yAxisIndex: 1,
+                data: {{ cost }}
+            }
+        ]
+    };
+
+
+    if (option && typeof option === 'object') {
+        myChart.setOption(option);
+    }
+
+    window.addEventListener('resize', myChart.resize);
+</script>
+</body>
+</html>
